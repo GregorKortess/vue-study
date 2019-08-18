@@ -11,9 +11,7 @@
 
 <div id="app">
 
-    <input type="text" v-model="price">
-    <div>Tax {{ moneyFormat(tax) }}</div>
-    <div>Total {{ moneyFormat(total) }}</div>
+    <accordion v-for="item in items" :key="item.id" :item="item"></accordion>
 
 </div>
 
@@ -21,30 +19,37 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 <script>
+
+    Vue.component('accordion', {
+        props: ['item'],
+
+        template: `
+        <div>
+            <p>{{ item.title }}</p>
+            <p @click="toggle = ! toggle">Details</p>
+            <p v-if="toggle">{{ item.description }}</p>
+        </div>
+        `,
+
+        data: function () {
+            return {
+                toggle: false,
+            }
+        }
+
+    });
+
     new Vue({
         el: '#app',
 
         data: {
-            price: 100,
+            items: [
+                {id: 1 ,title: 'Title 1', description: 'Description for item 1'},
+                {id: 2 ,title: 'Title 2', description: 'Description for item 2'},
+                {id: 3 ,title: 'Title 3', description: 'Description for item 3'},
+            ],
         },
 
-        methods: {
-            moneyFormat: function (price) {
-                return '$' + price;
-            }
-        },
-
-        computed: {
-            tax: function () {
-                return this.price * 0.1;
-            },
-
-
-            total: function () {
-                return parseInt(this.price) + this.tax;
-            },
-
-        },
 
     })
 </script>
